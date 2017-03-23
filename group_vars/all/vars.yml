@@ -1,0 +1,4 @@
+---
+elasticsearch_version: 5.2.2
+kibana_version: 5.2.2
+metricbeat_version: 5.2.2

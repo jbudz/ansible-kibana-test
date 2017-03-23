@@ -1,0 +1,8 @@
+---
+- name: start kibana servers
+  hosts: kibana
+  gather_facts: False
+  become: True
+  roles:
+    - kibana
+    - metricbeat

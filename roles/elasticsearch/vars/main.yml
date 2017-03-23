@@ -1,0 +1,3 @@
+---
+config_file: /etc/elasticsearch/elasticsearch.yml
+jvm_options: /etc/elasticsearch/jvm.options

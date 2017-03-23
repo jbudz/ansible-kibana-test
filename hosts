@@ -1,0 +1,11 @@
+kb1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_private_key_file=.vagrant/machines/kb1/virtualbox/private_key
+es1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2200 ansible_ssh_private_key_file=.vagrant/machines/es1/virtualbox/private_key
+es2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2201 ansible_ssh_private_key_file=.vagrant/machines/es2/virtualbox/private_key
+
+[elasticsearch]
+es1
+es2
+kb1
+
+[kibana]
+kb1

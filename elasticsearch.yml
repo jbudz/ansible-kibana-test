@@ -1,0 +1,8 @@
+---
+- name: start elasticsearch servers
+  hosts: elasticsearch
+  gather_facts: False
+  become: True
+  roles:
+    - elasticsearch
+    - metricbeat

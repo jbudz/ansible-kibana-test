@@ -1,0 +1,5 @@
+---
+- name: restart metricbeat
+  become: True
+  service: name=metricbeat state=restarted
+  

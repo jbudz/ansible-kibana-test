@@ -1,0 +1,44 @@
+---
+- name: install apt dependencies
+  become: True
+  apt: name={{ item }} update_cache=yes cache_valid_time=36000
+  with_items:
+    - openjdk-8-jre
+    - python-pexpect
+
+- name: add elastic key
+  apt_key: id=D88E42B4 url=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: add repo
+  apt_repository: repo="deb https://artifacts.elastic.co/packages/{{ elasticsearch_version[0] }}.x/apt stable main" state=present
+
+  # intentionally not restarting elasticsearch, on upgrade we need to do one node at a time
+- name: install elasticsearch
+  apt: name={{ item }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - elasticsearch={{ elasticsearch_version }}
+
+- name: configure elasticsearch.yml
+  template: src=templates/elasticsearch.yml.j2 dest={{ config_file }} owner=root group=elasticsearch mode=0440
+  notify: restart elasticsearch
+
+- name: configure jvm.options
+  template: src=templates/jvm.options.j2 dest={{ jvm_options }}
+  notify: restart elasticsearch
+
+- name: set max map count
+  command: sysctl -w vm.max_map_count=262144
+  changed_when: False
+
+- name: install plugins
+  expect:
+    command: bin/elasticsearch-plugin install {{ item }}
+    creates: /usr/share/elasticsearch/plugins/{{ item }}
+    chdir: /usr/share/elasticsearch
+    responses:
+      "Continue with installation": "y"
+  with_items: "{{ elasticsearch_plugins }}"
+  notify: restart elasticsearch
+
+- name: start elasticsearch
+  service: name=elasticsearch state=running enabled=yes

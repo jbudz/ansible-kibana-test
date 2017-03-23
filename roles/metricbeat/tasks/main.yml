@@ -1,0 +1,19 @@
+---
+- name: add elastic key
+  apt_key: id=D88E42B4 url=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: add repo
+  apt_repository: repo="deb https://artifacts.elastic.co/packages/{{ metricbeat_version[0] }}.x/apt stable main" state=present
+
+- name: install metricbeat
+  apt: name={{ item }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - metricbeat={{ metricbeat_version }}
+  notify: restart metricbeat
+
+- name: configure metricbeat.yml
+  template: src=templates/metricbeat.yml.j2 dest={{ config_file }} mode=0400
+  notify: restart metricbeat
+
+- name: start metricbeat
+  service: name=metricbeat state=running enabled=yes

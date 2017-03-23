@@ -1,0 +1,23 @@
+---
+- name: add elastic key
+  apt_key: id=D88E42B4 url=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+- name: add repo
+  apt_repository: repo="deb https://artifacts.elastic.co/packages/{{ kibana_version[0] }}.x/apt stable main" state=present
+
+- name: install kibana
+  apt: name={{ item }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - kibana={{ kibana_version }}
+  notify: restart kibana
+
+- name: configure kibana
+  template: src=templates/kibana.yml.j2 dest={{ config_file }}
+  notify: restart kibana
+
+- name: make kibana pid dir
+  file: path=/var/run/kibana owner=kibana group=kibana mode=0755 state=directory
+  notify: restart kibana
+
+- name: start kibana
+  service: name=kibana state=running enabled=yes

@@ -1,0 +1,7 @@
+---
+elasticsearch_broadcast_ip: 192.168.50.111
+elasticsearch_broadcast_port: 9200
+elasticsearch_heap: 1g
+elasticsearch_cluster_name: stackqa
+elasticsearch_node_master: "true"
+elasticsearch_node_data: "true"
