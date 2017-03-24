@@ -30,16 +30,6 @@ Vagrant.configure("2") do |config|
     es2.vm.hostname = "es2"
     es2.vm.network "private_network", ip: "192.168.50.111"
     es2.vm.provision :shell, inline: "apt-get -qqy install python"
-
-    # Once all VMs are started, provision ansible in parallel for all machines
-    es2.vm.provision "ansible" do |ansible|
-      ansible.playbook = "site.yml"
-      ansible.limit = "all"
-      ansible.groups = {
-        "elasticsearch" => ["es[1:2]", "kb1"],
-        "kibana" => ["kb1"]
-      }
-    end
     es2.vm.provider "virtualbox" do |v|
       v.name = "es2"
       v.memory = 2048
