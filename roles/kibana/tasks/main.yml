@@ -19,5 +19,14 @@
   file: path=/var/run/kibana owner=kibana group=kibana mode=0755 state=directory
   notify: restart kibana
 
+- name: install plugins
+  become_user: kibana
+  command: bin/kibana-plugin install {{ item }}
+  args:
+    creates: /usr/share/kibana/plugins/{{ item }}
+    chdir: /usr/share/kibana
+  with_items: "{{ kibana_plugins }}"
+  notify: restart kibana
+
 - name: start kibana
   service: name=kibana state=running enabled=yes
