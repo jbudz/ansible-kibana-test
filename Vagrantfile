@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
     kb1.vm.provision :shell, inline: "apt-get -qqy install python"
     kb1.vm.provider "virtualbox" do |v|
       v.name = "kb1"
-      v.memory = 2048
+      v.memory = 4096
     end
   end
 
